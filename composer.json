@@ -1,46 +1,43 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "zero-to-prod/google-client",
+    "description": "A wrapper around Google Client",
     "keywords": [
-        ":vendor_name",
+        "zero-to-prod",
         "laravel",
-        ":package_slug"
+        "google-client"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/zero-to-prod/google-client",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "D.A.Smith",
+            "email": "dasmith@zero-to-prod.com",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.0",
-        "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^8.73"
+        "google/apiclient": "^2.12.1",
+        "illuminate/contracts": "^8.73",
+        "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
         "nunomaduro/collision": "^5.10",
-        "nunomaduro/larastan": "^1.0",
         "orchestra/testbench": "^6.22",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.1",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^9.5",
         "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "ZeroToProd\\GoogleClient\\": "src",
+            "ZeroToProd\\GoogleClient\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "ZeroToProd\\GoogleClient\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -49,15 +46,18 @@
         "test-coverage": "vendor/bin/pest coverage"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "ZeroToProd\\GoogleClient\\GoogleClientServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "GoogleClient": "ZeroToProd\\GoogleClient\\Facades\\GoogleClient"
             }
         }
     },
