@@ -15,36 +15,22 @@ use Throwable;
 
 class GoogleClient
 {
-    public Google_Service_Analytics $client;
-
     /**
      * @throws Exception
      */
-    public function __construct(?string $gsa_key = null)
+    public function __construct(public ?string $key = null, public ?Google_Service_Analytics $client = null)
     {
-        if ($client = self::getClient($gsa_key)) {
-            $this->client = $client;
-        } else {
-            throw new RuntimeException('Invalid key.');
-        }
+        $this->client = $client === null ? self::getClient($key) : $this->client;
     }
 
     /**
      * Returns a Google Service Analytics Client instance.
-     *
-     * @param  null  $path_name
-     *
-     * @see GsaTest::getClient()
      */
-    public static function getClient(?string $gsa_key = null, $path_name = null): Google_Service_Analytics|bool
+    public function getClient(?string $gsa_key = null): Google_Service_Analytics|bool
     {
-        $path = $path_name ?? storage_path('app/analytics/service-account-credentials.json');
+        $path = self::getKeyPath();
 
-        File::ensureDirectoryExists(dirname($path));
-
-        if ($gsa_key !== null) {
-            File::put($path, $gsa_key);
-        }
+        self::storeKey($gsa_key, $path);
 
         try {
             $googleClient = new Google_Client();
@@ -54,21 +40,20 @@ class GoogleClient
 
             return new Google_Service_Analytics($googleClient);
         } catch (Throwable) {
-            return false;
+            return throw new RuntimeException('Invalid key.');
         }
     }
 
     /**
      * Checks if key is valid.
-     *
-     * @param  $gsa_key
-     *
-     * @return bool
-     * @see GsaTest::keyIsValid()
      */
-    public static function keyIsValid($gsa_key): bool
+    public static function keyIsValid(string $key): bool
     {
-        return self::getClient($gsa_key) !== false;
+        try {
+            return (new GoogleClient($key))->client !== null;
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     /**
@@ -78,7 +63,7 @@ class GoogleClient
      */
     public static function keyIsInvalid(?string $gsa_key): bool
     {
-        return self::getClient($gsa_key) === false;
+        return !self::keyIsValid($gsa_key);
     }
 
     /**
@@ -120,6 +105,28 @@ class GoogleClient
             return true;
         } catch (Throwable) {
             return false;
+        }
+    }
+
+    public static function getKeyPath(?string $path_name = null): string
+    {
+        $path = $path_name ?? storage_path('app/analytics/service-account-credentials.json');
+
+        File::ensureDirectoryExists(dirname($path));
+
+        return $path;
+    }
+
+    /**
+     * @param  string|null  $gsa_key
+     * @param  string  $path
+     *
+     * @return void
+     */
+    public static function storeKey(?string $gsa_key, string $path): void
+    {
+        if ($gsa_key !== null) {
+            File::put($path, $gsa_key);
         }
     }
 }
