@@ -34,9 +34,9 @@ class GoogleClient
 
         try {
             $googleClient = new Google_Client();
-            $googleClient->setApplicationName(config('gsa.app_name'));
+            $googleClient->setApplicationName(config('app.app_name'));
             $googleClient->setAuthConfig($path);
-            $googleClient->setScopes(config('gsa.scopes'));
+            $googleClient->setScopes(config('google-client.scopes'));
 
             return new Google_Service_Analytics($googleClient);
         } catch (Throwable) {
@@ -58,8 +58,6 @@ class GoogleClient
 
     /**
      * Checks if key is invalid.
-     *
-     * @see GsaTest::keyIsInvalid()
      */
     public static function keyIsInvalid(?string $gsa_key): bool
     {
@@ -100,7 +98,7 @@ class GoogleClient
     {
         Config::set('analytics.view_id', $profile_id);
         try {
-            File::put(config('analytics.service_account_credentials_json'), $key_as_json);
+            File::put(config('google-client.service_account_credentials_json'), $key_as_json);
 
             return true;
         } catch (Throwable) {
@@ -110,7 +108,7 @@ class GoogleClient
 
     public static function getKeyPath(?string $path_name = null): string
     {
-        $path = $path_name ?? storage_path('app/analytics/service-account-credentials.json');
+        $path = $path_name ?? config('google-client.service_account_credentials_json');
 
         File::ensureDirectoryExists(dirname($path));
 

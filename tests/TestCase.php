@@ -24,7 +24,7 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-        File::delete(storage_path('app/analytics/service-account-credentials.json'));
+        File::delete(config('google-client.service_account_credentials_json'));
     }
 
     protected function getPackageProviders($app)
@@ -39,7 +39,7 @@ class TestCase extends Orchestra
      */
     public function storeKeyForTest(): void
     {
-        $path = storage_path('app/analytics/service-account-credentials.json');
+        $path = config('google-client.service_account_credentials_json');
         File::ensureDirectoryExists(dirname($path));
         File::put($path, $this->key);
     }

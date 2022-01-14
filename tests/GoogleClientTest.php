@@ -73,6 +73,7 @@ class GoogleClientTest extends TestCase
 
     /**
      * @test
+     * @see GoogleClient::keyIsValid()
      */
     public function key_is_valid(): void
     {
@@ -81,9 +82,20 @@ class GoogleClientTest extends TestCase
 
     /**
      * @test
+     * @see GoogleClient::keyIsInValid()
      */
     public function key_is_invalid(): void
     {
         $this->assertTrue(GoogleClient::keyIsInValid(''));
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     * @see GoogleClient::accountSummariesList()
+     */
+    public function account_summaries_list(): void
+    {
+        dd((new GoogleClient($this->key))->accountSummariesList());
     }
 }
